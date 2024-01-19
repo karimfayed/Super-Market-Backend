@@ -17,7 +17,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ItemReadDto'
+                  $ref: '#/components/schemas/ItemReadDto'  
     post:
       summary: Create new items
       tags:
@@ -323,39 +323,47 @@ components:
         itemId:
           type: string
           description: The unique identifier for the item
-        name:
+        itemName:
           type: string
           description: The name of the item
+        itemDescription:
+          type: string
+          description: The description of the item
+        stockQuantity:
+          type: integer
+          description: The quantity of the item in stock
         price:
           type: number
           format: float
           description: The price of a single unit of the item
-        quantity:
-          type: integer
-          description: The quantity of the item in stock
       required:
         - itemId
-        - name
+        - itemName
+        - itemDescription
         - price
-        - quantity
+        - stockQuantity
         
     ItemWriteDto:
       type: object
       properties:
-        name:
+        itemName:
           type: string
           description: The name of the item
+        itemDescription:
+          type: string
+          description: The description of the item
+        stockQuantity:
+          type: integer
+          description: The quantity of the item in stock
         price:
           type: number
           format: float
           description: The price of a single unit of the item
-        quantity:
-          type: integer
-          description: The quantity of the item in stock
       required:
-        - name
+        - itemName
+        - itemDescription
         - price
-        - quantity
+        - stockQuantity
 
 
     InvoiceReadDto:

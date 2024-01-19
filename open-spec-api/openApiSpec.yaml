@@ -1,0 +1,441 @@
+openapi: 3.0.0
+info:
+  title: Sales API
+  version: 1.0.0
+paths:
+  # Items Endpoints
+  /items:
+    get:
+      summary: Get all items
+      tags:
+        - Items
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemReadDto'
+    post:
+      summary: Create new items
+      tags:
+        - Items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemWriteDto'
+      responses:
+        '201':
+          description: Items created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemReadDto'
+
+  /items/{item_id}:
+    get:
+      summary: Get details of a specific item
+      tags:
+        - Items
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemReadDto'
+    put:
+      summary: Update details of a specific item
+      tags:
+        - Items
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemWriteDto'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemReadDto'
+    delete:
+      summary: Delete a specific item
+      tags:
+        - Items
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Item deleted successfully
+
+  # Invoices Endpoints
+  /invoices:
+    get:
+      summary: Get all invoices
+      tags:
+        - Invoices
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceReadDto'
+    post:
+      summary: Create new invoices
+      tags:
+        - Invoices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/InvoiceWriteDto'
+
+      responses:
+        '201':
+          description: Invoice created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceReadDto'
+
+  /invoices/{invoice_id}:
+    get:
+      summary: Get details of a specific invoice
+      tags:
+        - Invoices
+      parameters:
+        - name: invoice_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceReadDto'
+    put:
+      summary: Update details of a specific invoice
+      tags:
+        - Invoices
+      parameters:
+        - name: invoice_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceWriteDto'
+      responses:
+        '200':
+          description: Invoice updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceReadDto'
+    delete:
+      summary: Delete a specific invoice
+      tags:
+        - Invoices
+      parameters:
+        - name: invoice_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Invoice deleted successfully
+
+  /invoices/{invoice_id}/status:
+    put:
+      summary: Update the status of a specific invoice
+      tags:
+        - Invoices
+      parameters:
+        - name: invoice_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: ['Placed', 'Delivered', 'Cancelled']
+      responses:
+        '200':
+          description: Invoice status updated successfully
+
+  # Users Endpoints
+  /users:
+    get:
+      summary: Get all users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+    post:
+      summary: Create new users
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserDto'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+
+  /users/{user_id}:
+    get:
+      summary: Get details of a specific user
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+    put:
+      summary: Update details of a specific user
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+    delete:
+      summary: Delete a specific user
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted successfully
+
+  /users/{user_id}/invoices:
+    get:
+      summary: Get invoices for a specific user
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceReadDto'
+
+components:
+  schemas:
+    ItemReadDto:
+      type: object
+      properties:
+        itemId:
+          type: string
+          description: The unique identifier for the item
+        name:
+          type: string
+          description: The name of the item
+        price:
+          type: number
+          format: float
+          description: The price of a single unit of the item
+        quantity:
+          type: integer
+          description: The quantity of the item in stock
+      required:
+        - itemId
+        - name
+        - price
+        - quantity
+        
+    ItemWriteDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the item
+        price:
+          type: number
+          format: float
+          description: The price of a single unit of the item
+        quantity:
+          type: integer
+          description: The quantity of the item in stock
+      required:
+        - name
+        - price
+        - quantity
+
+
+    InvoiceReadDto:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          description: The unique identifier for the invoice
+        date:
+          type: string
+          format: date
+          description: The date of the invoice
+        status:
+          type: string
+          enum: ['Placed', 'Delivered', 'Cancelled']
+          description: The status of the invoice
+        invoicedItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicedItem'
+          description: An array of invoiced items
+      required:
+        - invoiceId
+        - date
+        - status
+        - invoicedItems
+        
+    InvoiceWriteDto:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          description: The date of the invoice
+        status:
+          type: string
+          enum: ['Placed', 'Delivered', 'Cancelled']
+          description: The status of the invoice
+        invoicedItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicedItem'
+          description: An array of invoiced items
+      required:
+        - date
+        - status
+        - invoicedItems
+        
+    InvoicedItem:
+      type: object
+      properties:
+        itemName:
+          type: string
+          description: The name of the invoiced item
+        quantity:
+          type: integer
+          description: The quantity of the invoiced item
+        totalUnitPrice:
+          type: number
+          format: float
+          description: The total unit price for the invoiced item
+      required:
+        - itemName
+        - quantity
+        - totalUnitPrice
+        
+    UserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The email address of the user
+        firstName:
+          type: string
+          description: The first name of the user
+        lastName:
+          type: string
+          description: The last name of the user
+      required:
+        - email
+        - firstName
+        - lastName

@@ -1,0 +1,12 @@
+# Node
+node_modules/
+dist/
+
+# dotenv
+.env
+
+# ESLint
+.eslintcache
+
+# Jest
+coverage/

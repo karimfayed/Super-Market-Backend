@@ -2,6 +2,7 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
 import { ItemsWriteDto } from '../dtos/items.dto';
+import { NotFoundError } from '../errors/NotFoundError';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 dotenv.config();
@@ -89,4 +90,12 @@ export const addItemsInDatabase = async (items: ItemsWriteDto[]): Promise<Items[
     await newTransaction.rollback();
     throw error;
   }
+};
+
+export const getItemInDatabase = async (itemId: number) => {
+  const item = await Items.findByPk(itemId);
+
+  if (!item) throw new NotFoundError();
+
+  return item;
 };

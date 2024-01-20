@@ -1,9 +1,12 @@
 import { NextFunction, Response, Router } from 'express';
-import { addItems, getAllItems } from '../controllers/itemsController';
+import { addItems, getAllItems, getItem } from '../controllers/itemsController';
 import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
 
-import { AddItemsRequest, GetAllItemsRequest } from '../Requests/itemsRequests';
-import { validateAddItemsRequest } from '../middlewares/validateItemsRequest';
+import { AddItemsRequest, GetAllItemsRequest, GetItemRequest } from '../Requests/itemsRequests';
+import {
+  validateAddItemsRequest,
+  validateGetItemRequest
+} from '../middlewares/validateItemsRequest';
 
 const router = Router();
 
@@ -23,6 +26,19 @@ router.post(
     try {
       const addedItems = await addItems(req.body);
       createdResponseHandler(addedItems, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.get(
+  '/:itemId',
+  validateGetItemRequest,
+  async (req: GetItemRequest, res: Response, next: NextFunction) => {
+    try {
+      const responseDto = await getItem(req);
+      okResponseHandler(responseDto, res);
     } catch (err) {
       return next(err);
     }

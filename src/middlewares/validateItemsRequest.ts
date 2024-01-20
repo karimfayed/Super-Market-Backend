@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ItemsWriteDto } from '../dtos/items.dto';
 import { BadRequestError } from '../errors/BadRequestError';
 import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
+import { GetItemRequest } from '../Requests/itemsRequests';
 
 export const validateAddItemsRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, ItemsWriteDto[]>,
@@ -47,3 +48,25 @@ export const areFieldValuesValid = (item: ItemsWriteDto) => {
     typeof price === 'number'
   );
 };
+
+export const validateGetItemRequest = (req: GetItemRequest, _res: Response, next: NextFunction) => {
+  try {
+    validateItemId(req);
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};
+
+function validateItemId(req: GetItemRequest) {
+  const isValid = isItemIdValid(req);
+  if (!isValid) throw new BadRequestError(ItemsErrorMessages.InvalidItemId);
+}
+
+function isItemIdValid(req: GetItemRequest) {
+  const { itemId } = req.params;
+
+  const parsedItemId = Number(itemId);
+
+  return Number.isInteger(parsedItemId);
+}

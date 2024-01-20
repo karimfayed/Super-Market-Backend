@@ -99,3 +99,12 @@ export const getItemInDatabase = async (itemId: number) => {
 
   return item;
 };
+
+export const updateItemInDatabase = async (itemId: number, updates: ItemsWriteDto) => {
+  const updatedItem = await Items.update(updates, {
+    where: {
+      itemId
+    }
+  });
+  return updatedItem;
+};

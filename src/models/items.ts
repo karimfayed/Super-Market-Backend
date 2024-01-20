@@ -31,7 +31,7 @@ export class Items extends Model {
 Items.init(
   {
     itemId: {
-      type: DataTypes.STRING(13),
+      type: DataTypes.INTEGER,
       unique: true,
       primaryKey: true,
       autoIncrement: true
@@ -107,4 +107,23 @@ export const updateItemInDatabase = async (itemId: number, updates: ItemsWriteDt
     }
   });
   return updatedItem;
+};
+
+export const deleteItemInDatabase = async (itemId: number) => {
+  const newTransaction = await sequelize.transaction();
+
+  const deletedItem = await Items.update(
+    { stockQuantity: 0 },
+    {
+      where: {
+        itemId
+      },
+      transaction: newTransaction
+    }
+  );
+  await newTransaction.commit();
+
+  if (deletedItem[0] === 0) throw new NotFoundError();
+
+  return deletedItem;
 };

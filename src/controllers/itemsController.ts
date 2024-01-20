@@ -2,12 +2,13 @@ import { Model } from 'sequelize';
 import {
   Items,
   addItemsInDatabase,
+  deleteItemInDatabase,
   getAllItemsInDatabase,
   getItemInDatabase,
   updateItemInDatabase
 } from '../models/items';
 import { ItemsReadDto, ItemsWriteDto } from '../dtos/items.dto';
-import { GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
+import { DeleteItemRequest, GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
 
 export const getAllItems = async (): Promise<ItemsReadDto[]> => {
   const items = await getAllItemsInDatabase();
@@ -72,4 +73,10 @@ export const updateItem = async (req: UpdateItemRequest): Promise<ItemsReadDto> 
   };
 
   return responseDto;
+};
+
+export const deleteItem = async (req: DeleteItemRequest): Promise<void> => {
+  const { itemId } = req.params;
+  await deleteItemInDatabase(itemId);
+  return;
 };

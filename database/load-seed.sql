@@ -1,4 +1,4 @@
--- USE supermarketdb;
+#USE supermarketdb;
 
 -- Insert data into items table
 INSERT INTO items ( itemName, itemDescription, stockQuantity, price)
@@ -8,10 +8,10 @@ VALUES
 ('Eggs', 'Farm-fresh eggs', 100, 4.99);
 
 -- Insert data into users table
-INSERT INTO users (email, firstName, lastName)
+INSERT INTO users (email, firstName, lastName, isActive)
 VALUES
-('john.doe@example.com', 'John', 'Doe'),
-('jane.smith@example.com', 'Jane', 'Smith');
+('john.doe@example.com', 'John', 'Doe', 1),
+('jane.smith@example.com', 'Jane', 'Smith', 1);
 
 -- Insert data into invoices table
 INSERT INTO invoices (creationDate, invoiceStatus, email)

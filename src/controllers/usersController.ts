@@ -4,11 +4,12 @@ import {
   Users,
   addUsersInDatabase,
   getAllUsersInDatabase,
-  getUserInDatabase
+  getUserInDatabase,
+  updateUserInDatabase
 } from '../models/users';
 import { UsersDto } from '../dtos/users.dto';
 import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
-import { GetUserRequest } from '../Requests/usersRequests';
+import { GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
 
 export const getAllUsers = async (res: Response): Promise<void> => {
   const items = await getAllUsersInDatabase();
@@ -43,6 +44,25 @@ export const getUser = async (req: GetUserRequest, res: Response): Promise<void>
     email: item.dataValues.email,
     firstName: item.dataValues.firstName,
     lastName: item.dataValues.lastName
+  };
+
+  okResponseHandler(responseDto, res);
+};
+
+export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
+  const { email } = req.params;
+  const { body: user } = req;
+
+  const itemUpdates: UsersDto = {
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName
+  };
+
+  await updateUserInDatabase(email, itemUpdates);
+
+  const responseDto: UsersDto = {
+    ...itemUpdates
   };
 
   okResponseHandler(responseDto, res);

@@ -1,9 +1,15 @@
 import { NextFunction, Response, Router } from 'express';
-import { AddUsersRequest, GetAllUsersRequest, GetUserRequest } from '../Requests/usersRequests';
-import { addUsers, getAllUsers, getUser } from '../controllers/usersController';
+import {
+  AddUsersRequest,
+  GetAllUsersRequest,
+  GetUserRequest,
+  UpdateUserRequest
+} from '../Requests/usersRequests';
+import { addUsers, getAllUsers, getUser, updateUser } from '../controllers/usersController';
 import {
   validateAddUsersRequest,
-  validateGetUserRequest
+  validateGetUserRequest,
+  validateUpdateUserRequest
 } from '../middlewares/validateUsersRequest';
 
 const router = Router();
@@ -34,6 +40,18 @@ router.get(
   async (req: GetUserRequest, res: Response, next: NextFunction) => {
     try {
       await getUser(req, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.put(
+  '/:email',
+  validateUpdateUserRequest,
+  async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
+    try {
+      await updateUser(req, res);
     } catch (err) {
       return next(err);
     }

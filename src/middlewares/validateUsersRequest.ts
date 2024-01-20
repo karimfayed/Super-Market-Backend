@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { BadRequestError } from '../errors/BadRequestError';
-import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
-import { areFieldValuesValid, areRequiredFieldsPresent } from '../helpers/userValidation';
-import { UsersDto } from 'src/dtos/users.dto';
+import { UsersErrorMessages } from '../constants/ItemsErrorMessages';
+import {
+  areFieldValuesValid,
+  areRequiredFieldsPresent,
+  isEmailValid
+} from '../helpers/userValidation';
+import { UsersDto } from '../dtos/users.dto';
+import { GetUserRequest } from '../Requests/usersRequests';
 
 export const validateAddUsersRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, UsersDto[]>,
@@ -22,13 +27,27 @@ export const validateAddUsersRequest = (
 export const validateRequiredFields = (items: UsersDto[]) => {
   items.map((user: UsersDto) => {
     const areValid = areRequiredFieldsPresent(user);
-    if (!areValid) throw new BadRequestError(ItemsErrorMessages.RequiredFieldsMissing);
+    if (!areValid) throw new BadRequestError(UsersErrorMessages.RequiredFieldsMissing);
   });
 };
 
 export const validateFieldValues = (users: UsersDto[]) => {
   users.map((item: UsersDto) => {
     const areValid = areFieldValuesValid(item);
-    if (!areValid) throw new BadRequestError(ItemsErrorMessages.InvalidFieldValues);
+    if (!areValid) throw new BadRequestError(UsersErrorMessages.InvalidFieldValues);
   });
 };
+
+export const validateGetUserRequest = (req: GetUserRequest, _res: Response, next: NextFunction) => {
+  try {
+    validateUserId(req);
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};
+
+function validateUserId(req: GetUserRequest) {
+  const isValid = isEmailValid(req);
+  if (!isValid) throw new BadRequestError(UsersErrorMessages.InvalidItemId);
+}

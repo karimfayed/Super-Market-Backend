@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { Connection } from './databaseConnection';
 import { UsersDto } from '../dtos/users.dto';
+import { NotFoundError } from '../errors/NotFoundError';
 
 export class Users extends Model {
   public email!: string;
@@ -70,4 +71,12 @@ export const addUsersInDatabase = async (users: UsersDto[]): Promise<Users[]> =>
     await newTransaction.rollback();
     throw error;
   }
+};
+
+export const getUserInDatabase = async (email: string) => {
+  const user = await Users.findByPk(email);
+
+  if (!user || user.isActive === 0) throw new NotFoundError();
+
+  return user;
 };

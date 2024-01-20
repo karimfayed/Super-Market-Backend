@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { Model } from 'sequelize';
-import { Users, getAllUsersInDatabase } from '../models/users';
+import { Users, addUsersInDatabase, getAllUsersInDatabase } from '../models/users';
 import { UsersDto } from '../dtos/users.dto';
-import { okResponseHandler } from '../middlewares/responseHandlers';
+import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
 
 export const getAllUsers = async (res: Response): Promise<void> => {
   const items = await getAllUsersInDatabase();
@@ -10,9 +10,20 @@ export const getAllUsers = async (res: Response): Promise<void> => {
   const responseDto: UsersDto[] = items.map((item: Model<Users>) => ({
     email: item.dataValues.email,
     firstName: item.dataValues.firstName,
-    lastName: item.dataValues.lastName,
-    isActive: item.dataValues.isActive
+    lastName: item.dataValues.lastName
   }));
 
   okResponseHandler(responseDto, res);
+};
+
+export const addUsers = async (users: UsersDto[], res: Response): Promise<void> => {
+  const usersAdded = await addUsersInDatabase(users);
+
+  const responseDto: UsersDto[] = usersAdded.map((item: Model<Users>) => ({
+    email: item.dataValues.email,
+    firstName: item.dataValues.firstName,
+    lastName: item.dataValues.lastName
+  }));
+
+  createdResponseHandler(responseDto, res);
 };

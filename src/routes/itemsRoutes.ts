@@ -6,11 +6,6 @@ import {
   getItem,
   updateItem
 } from '../controllers/itemsController';
-import {
-  createdResponseHandler,
-  noContentResponseHandler,
-  okResponseHandler
-} from '../middlewares/responseHandlers';
 
 import {
   AddItemsRequest,
@@ -30,8 +25,7 @@ const router = Router();
 
 router.get('/', async (_req: GetAllItemsRequest, res: Response, next: NextFunction) => {
   try {
-    const responseDto = await getAllItems();
-    okResponseHandler(responseDto, res);
+    await getAllItems(res);
   } catch (err) {
     return next(err);
   }
@@ -42,8 +36,7 @@ router.post(
   validateAddItemsRequest,
   async (req: AddItemsRequest, res: Response, next: NextFunction) => {
     try {
-      const addedItems = await addItems(req.body);
-      createdResponseHandler(addedItems, res);
+      await addItems(req.body, res);
     } catch (err) {
       return next(err);
     }
@@ -55,8 +48,7 @@ router.get(
   validateGetItemRequest,
   async (req: GetItemRequest, res: Response, next: NextFunction) => {
     try {
-      const responseDto = await getItem(req);
-      okResponseHandler(responseDto, res);
+      await getItem(req, res);
     } catch (err) {
       return next(err);
     }
@@ -68,8 +60,7 @@ router.put(
   validateUpdateItemRequest,
   async (req: UpdateItemRequest, res: Response, next: NextFunction) => {
     try {
-      const responseDto = await updateItem(req);
-      okResponseHandler(responseDto, res);
+      await updateItem(req, res);
     } catch (err) {
       return next(err);
     }
@@ -81,8 +72,7 @@ router.delete(
   validateDeleteItemRequest,
   async (req: DeleteItemRequest, res: Response, next: NextFunction) => {
     try {
-      await deleteItem(req);
-      noContentResponseHandler(res);
+      await deleteItem(req, res);
     } catch (err) {
       return next(err);
     }

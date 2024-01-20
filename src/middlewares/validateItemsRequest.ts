@@ -3,6 +3,11 @@ import { ItemsWriteDto } from '../dtos/items.dto';
 import { BadRequestError } from '../errors/BadRequestError';
 import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
 import { DeleteItemRequest, GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
+import {
+  areFieldValuesValid,
+  areRequiredFieldsPresent,
+  isItemIdValid
+} from '../helpers/itemValidation';
 
 export const validateAddItemsRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, ItemsWriteDto[]>,
@@ -33,22 +38,6 @@ export const validateFieldValues = (items: ItemsWriteDto[]) => {
   });
 };
 
-export const areRequiredFieldsPresent = (item: ItemsWriteDto) => {
-  const { itemName, itemDescription, stockQuantity, price } = item;
-  return itemName && itemDescription && stockQuantity && price ? true : false;
-};
-
-export const areFieldValuesValid = (item: ItemsWriteDto) => {
-  const { itemName, itemDescription, stockQuantity, price } = item;
-  return (
-    typeof itemName === 'string' &&
-    typeof itemDescription === 'string' &&
-    typeof stockQuantity === 'number' &&
-    Number.isInteger(stockQuantity) &&
-    typeof price === 'number'
-  );
-};
-
 export const validateGetItemRequest = (req: GetItemRequest, _res: Response, next: NextFunction) => {
   try {
     validateItemId(req);
@@ -61,14 +50,6 @@ export const validateGetItemRequest = (req: GetItemRequest, _res: Response, next
 function validateItemId(req: GetItemRequest) {
   const isValid = isItemIdValid(req);
   if (!isValid) throw new BadRequestError(ItemsErrorMessages.InvalidItemId);
-}
-
-function isItemIdValid(req: GetItemRequest) {
-  const { itemId } = req.params;
-
-  const parsedItemId = Number(itemId);
-
-  return Number.isInteger(parsedItemId);
 }
 
 export const validateUpdateItemRequest = (

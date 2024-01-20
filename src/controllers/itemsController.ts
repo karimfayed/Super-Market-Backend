@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import { Model } from 'sequelize';
 import {
   Items,
@@ -9,8 +10,13 @@ import {
 } from '../models/items';
 import { ItemsReadDto, ItemsWriteDto } from '../dtos/items.dto';
 import { DeleteItemRequest, GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
+import {
+  createdResponseHandler,
+  noContentResponseHandler,
+  okResponseHandler
+} from '../middlewares/responseHandlers';
 
-export const getAllItems = async (): Promise<ItemsReadDto[]> => {
+export const getAllItems = async (res: Response): Promise<void> => {
   const items = await getAllItemsInDatabase();
 
   const responseDto: ItemsReadDto[] = items.map((item: Model<Items>) => ({
@@ -21,10 +27,10 @@ export const getAllItems = async (): Promise<ItemsReadDto[]> => {
     price: item.dataValues.price
   }));
 
-  return responseDto;
+  okResponseHandler(responseDto, res);
 };
 
-export const addItems = async (items: ItemsWriteDto[]): Promise<ItemsReadDto[]> => {
+export const addItems = async (items: ItemsWriteDto[], res: Response): Promise<void> => {
   const itemsAdded = await addItemsInDatabase(items);
 
   const responseDto: ItemsReadDto[] = itemsAdded.map((item: Model<Items>) => ({
@@ -34,14 +40,14 @@ export const addItems = async (items: ItemsWriteDto[]): Promise<ItemsReadDto[]> 
     stockQuantity: item.dataValues.stockQuantity,
     price: item.dataValues.price
   }));
-  return responseDto;
+
+  createdResponseHandler(responseDto, res);
 };
 
-export const getItem = async (req: GetItemRequest): Promise<ItemsReadDto> => {
+export const getItem = async (req: GetItemRequest, res: Response): Promise<void> => {
   const { itemId } = req.params;
 
   const item = (await getItemInDatabase(itemId)) as Model<Items>;
-  console.log('item', item);
 
   const responseDto: ItemsReadDto = {
     itemId: item.dataValues.itemId,
@@ -51,10 +57,10 @@ export const getItem = async (req: GetItemRequest): Promise<ItemsReadDto> => {
     price: item.dataValues.price
   };
 
-  return responseDto;
+  okResponseHandler(responseDto, res);
 };
 
-export const updateItem = async (req: UpdateItemRequest): Promise<ItemsReadDto> => {
+export const updateItem = async (req: UpdateItemRequest, res: Response): Promise<void> => {
   const { itemId } = req.params;
   const { body: item } = req;
 
@@ -72,11 +78,11 @@ export const updateItem = async (req: UpdateItemRequest): Promise<ItemsReadDto> 
     ...itemUpdates
   };
 
-  return responseDto;
+  okResponseHandler(responseDto, res);
 };
 
-export const deleteItem = async (req: DeleteItemRequest): Promise<void> => {
+export const deleteItem = async (req: DeleteItemRequest, res: Response): Promise<void> => {
   const { itemId } = req.params;
   await deleteItemInDatabase(itemId);
-  return;
+  noContentResponseHandler(res);
 };

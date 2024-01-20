@@ -10,3 +10,9 @@ export type GetItemRequest = Request<
   NonNullable<unknown>,
   NonNullable<unknown>
 >;
+
+export type UpdateItemRequest = Request<
+  Pick<ItemsReadDto, 'itemId'>,
+  NonNullable<unknown>,
+  ItemsWriteDto
+>;

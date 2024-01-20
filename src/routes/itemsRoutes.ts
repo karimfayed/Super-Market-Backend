@@ -1,11 +1,17 @@
 import { NextFunction, Response, Router } from 'express';
-import { addItems, getAllItems, getItem } from '../controllers/itemsController';
+import { addItems, getAllItems, getItem, updateItem } from '../controllers/itemsController';
 import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
 
-import { AddItemsRequest, GetAllItemsRequest, GetItemRequest } from '../Requests/itemsRequests';
+import {
+  AddItemsRequest,
+  GetAllItemsRequest,
+  GetItemRequest,
+  UpdateItemRequest
+} from '../Requests/itemsRequests';
 import {
   validateAddItemsRequest,
-  validateGetItemRequest
+  validateGetItemRequest,
+  validateUpdateItemRequest
 } from '../middlewares/validateItemsRequest';
 
 const router = Router();
@@ -38,6 +44,19 @@ router.get(
   async (req: GetItemRequest, res: Response, next: NextFunction) => {
     try {
       const responseDto = await getItem(req);
+      okResponseHandler(responseDto, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.put(
+  '/:itemId',
+  validateUpdateItemRequest,
+  async (req: UpdateItemRequest, res: Response, next: NextFunction) => {
+    try {
+      const responseDto = await updateItem(req);
       okResponseHandler(responseDto, res);
     } catch (err) {
       return next(err);

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ItemsWriteDto } from '../dtos/items.dto';
 import { BadRequestError } from '../errors/BadRequestError';
 import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
-import { GetItemRequest } from '../Requests/itemsRequests';
+import { GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
 
 export const validateAddItemsRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, ItemsWriteDto[]>,
@@ -70,3 +70,18 @@ function isItemIdValid(req: GetItemRequest) {
 
   return Number.isInteger(parsedItemId);
 }
+
+export const validateUpdateItemRequest = (
+  req: UpdateItemRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  const { body: items } = req;
+  try {
+    validateItemId(req as GetItemRequest);
+    validateRequiredFields([items]);
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};

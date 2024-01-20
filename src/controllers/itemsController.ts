@@ -3,10 +3,11 @@ import {
   Items,
   addItemsInDatabase,
   getAllItemsInDatabase,
-  getItemInDatabase
+  getItemInDatabase,
+  updateItemInDatabase
 } from '../models/items';
 import { ItemsReadDto, ItemsWriteDto } from '../dtos/items.dto';
-import { GetItemRequest } from 'src/Requests/itemsRequests';
+import { GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
 
 export const getAllItems = async (): Promise<ItemsReadDto[]> => {
   const items = await getAllItemsInDatabase();
@@ -47,6 +48,27 @@ export const getItem = async (req: GetItemRequest): Promise<ItemsReadDto> => {
     itemDescription: item.dataValues.itemDescription,
     stockQuantity: item.dataValues.stockQuantity,
     price: item.dataValues.price
+  };
+
+  return responseDto;
+};
+
+export const updateItem = async (req: UpdateItemRequest): Promise<ItemsReadDto> => {
+  const { itemId } = req.params;
+  const { body: item } = req;
+
+  const itemUpdates: ItemsWriteDto = {
+    itemName: item.itemName,
+    itemDescription: item.itemDescription,
+    stockQuantity: item.stockQuantity,
+    price: item.price
+  };
+
+  await updateItemInDatabase(itemId, itemUpdates);
+
+  const responseDto: ItemsReadDto = {
+    itemId: itemId,
+    ...itemUpdates
   };
 
   return responseDto;

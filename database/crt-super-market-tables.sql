@@ -30,7 +30,8 @@ CREATE TABLE items (
 CREATE TABLE users (
   email VARCHAR(255) PRIMARY KEY,
   firstName VARCHAR(255) NOT NULL,
-  lastName VARCHAR(255) NOT NULL
+  lastName VARCHAR(255) NOT NULL,
+  is_active tinyint CHECK (is_active IN (0, 1))
 );
 
 -- -----------------------------------------------------

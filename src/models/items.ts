@@ -1,24 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Sequelize, Model, DataTypes } from 'sequelize';
-import dotenv from 'dotenv';
+import { Model, DataTypes } from 'sequelize';
 import { ItemsWriteDto } from '../dtos/items.dto';
 import { NotFoundError } from '../errors/NotFoundError';
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-dotenv.config();
-
-const sequelize = new Sequelize(
-  process.env.DATABASE!,
-  process.env.DATABASE_USER!,
-  process.env.DATABASE_PASSWORD,
-  {
-    host: process.env.HOST,
-    dialect: 'mysql',
-    define: {
-      timestamps: false
-    }
-  }
-);
+import { Connection } from './databaseConnection';
 
 export class Items extends Model {
   public itemId!: number;
@@ -55,7 +38,7 @@ Items.init(
   },
   {
     tableName: 'items',
-    sequelize
+    sequelize: Connection
   }
 );
 
@@ -67,7 +50,7 @@ export const getAllItemsInDatabase = async (): Promise<Items[]> => {
 };
 
 export const addItemsInDatabase = async (items: ItemsWriteDto[]): Promise<Items[]> => {
-  const newTransaction = await sequelize.transaction();
+  const newTransaction = await Connection.transaction();
   const newItems: Items[] = [];
 
   try {
@@ -110,7 +93,7 @@ export const updateItemInDatabase = async (itemId: number, updates: ItemsWriteDt
 };
 
 export const deleteItemInDatabase = async (itemId: number) => {
-  const newTransaction = await sequelize.transaction();
+  const newTransaction = await Connection.transaction();
 
   const deletedItem = await Items.update(
     { stockQuantity: 0 },

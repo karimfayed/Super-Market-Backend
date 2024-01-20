@@ -10,3 +10,5 @@ export type GetUserRequest = Request<
   NonNullable<unknown>,
   NonNullable<unknown>
 >;
+
+export type UpdateUserRequest = Request<Pick<UsersDto, 'email'>, NonNullable<unknown>, UsersDto>;

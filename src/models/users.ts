@@ -80,3 +80,12 @@ export const getUserInDatabase = async (email: string) => {
 
   return user;
 };
+
+export const updateUserInDatabase = async (email: string, updates: UsersDto) => {
+  const updatedUser = await Users.update(updates, {
+    where: {
+      email: email
+    }
+  });
+  return updatedUser;
+};

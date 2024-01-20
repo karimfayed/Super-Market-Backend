@@ -7,7 +7,7 @@ import {
   isEmailValid
 } from '../helpers/userValidation';
 import { UsersDto } from '../dtos/users.dto';
-import { GetUserRequest } from '../Requests/usersRequests';
+import { GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
 
 export const validateAddUsersRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, UsersDto[]>,
@@ -40,14 +40,29 @@ export const validateFieldValues = (users: UsersDto[]) => {
 
 export const validateGetUserRequest = (req: GetUserRequest, _res: Response, next: NextFunction) => {
   try {
-    validateUserId(req);
+    validateUserEmail(req);
   } catch (error) {
     return next(error);
   }
   return next();
 };
 
-function validateUserId(req: GetUserRequest) {
+function validateUserEmail(req: GetUserRequest) {
   const isValid = isEmailValid(req);
   if (!isValid) throw new BadRequestError(UsersErrorMessages.InvalidItemId);
 }
+
+export const validateUpdateUserRequest = (
+  req: UpdateUserRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  const { body: user } = req;
+  try {
+    validateUserEmail(req as GetUserRequest);
+    validateRequiredFields([user]);
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};

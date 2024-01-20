@@ -1,15 +1,27 @@
 import { NextFunction, Response, Router } from 'express';
-import { addItems, getAllItems, getItem, updateItem } from '../controllers/itemsController';
-import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
+import {
+  addItems,
+  deleteItem,
+  getAllItems,
+  getItem,
+  updateItem
+} from '../controllers/itemsController';
+import {
+  createdResponseHandler,
+  noContentResponseHandler,
+  okResponseHandler
+} from '../middlewares/responseHandlers';
 
 import {
   AddItemsRequest,
+  DeleteItemRequest,
   GetAllItemsRequest,
   GetItemRequest,
   UpdateItemRequest
 } from '../Requests/itemsRequests';
 import {
   validateAddItemsRequest,
+  validateDeleteItemRequest,
   validateGetItemRequest,
   validateUpdateItemRequest
 } from '../middlewares/validateItemsRequest';
@@ -58,6 +70,19 @@ router.put(
     try {
       const responseDto = await updateItem(req);
       okResponseHandler(responseDto, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.delete(
+  '/:itemId',
+  validateDeleteItemRequest,
+  async (req: DeleteItemRequest, res: Response, next: NextFunction) => {
+    try {
+      await deleteItem(req);
+      noContentResponseHandler(res);
     } catch (err) {
       return next(err);
     }

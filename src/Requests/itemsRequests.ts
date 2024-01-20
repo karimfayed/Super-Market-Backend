@@ -16,3 +16,9 @@ export type UpdateItemRequest = Request<
   NonNullable<unknown>,
   ItemsWriteDto
 >;
+
+export type DeleteItemRequest = Request<
+  Pick<ItemsReadDto, 'itemId'>,
+  NonNullable<unknown>,
+  NonNullable<unknown>
+>;

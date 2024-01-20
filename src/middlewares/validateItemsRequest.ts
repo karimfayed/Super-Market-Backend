@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ItemsWriteDto } from '../dtos/items.dto';
 import { BadRequestError } from '../errors/BadRequestError';
 import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
-import { GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
+import { DeleteItemRequest, GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
 
 export const validateAddItemsRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, ItemsWriteDto[]>,
@@ -80,6 +80,19 @@ export const validateUpdateItemRequest = (
   try {
     validateItemId(req as GetItemRequest);
     validateRequiredFields([items]);
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};
+
+export const validateDeleteItemRequest = (
+  req: DeleteItemRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  try {
+    validateItemId(req as GetItemRequest);
   } catch (error) {
     return next(error);
   }

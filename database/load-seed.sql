@@ -8,7 +8,7 @@ VALUES
 ('Eggs', 'Farm-fresh eggs', 100, 4.99);
 
 -- Insert data into users table
-INSERT INTO users (email, firstName, lastName, is_active)
+INSERT INTO users (email, firstName, lastName, isActive)
 VALUES
 ('john.doe@example.com', 'John', 'Doe', 1),
 ('jane.smith@example.com', 'Jane', 'Smith', 1);

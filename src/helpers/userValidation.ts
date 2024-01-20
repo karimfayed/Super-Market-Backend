@@ -1,4 +1,5 @@
-import { UsersDto } from 'src/dtos/users.dto';
+import { GetUserRequest } from 'src/Requests/usersRequests';
+import { UsersDto } from '../dtos/users.dto';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -16,3 +17,8 @@ export const areFieldValuesValid = (user: UsersDto) => {
     typeof lastName === 'string'
   );
 };
+
+export function isEmailValid(req: GetUserRequest) {
+  const { email } = req.params;
+  return emailRegex.test(email);
+}

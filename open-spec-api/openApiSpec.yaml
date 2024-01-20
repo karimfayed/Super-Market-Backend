@@ -240,7 +240,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserDto'
 
-  /users/{user_id}:
+  /users/{email}:
     get:
       summary: Get details of a specific user
       tags:
@@ -294,13 +294,13 @@ paths:
         '204':
           description: User deleted successfully
 
-  /users/{user_id}/invoices:
+  /users/{email}/invoices:
     get:
       summary: Get invoices for a specific user
       tags:
         - Users
       parameters:
-        - name: user_id
+        - name: email
           in: path
           required: true
           schema:

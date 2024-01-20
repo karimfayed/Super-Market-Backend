@@ -16,7 +16,7 @@ USE supermarketdb;
 -- -----------------------------------------------------
 
 CREATE TABLE items (
-  itemId VARCHAR(13) PRIMARY KEY NOT NULL,
+  itemId INT PRIMARY KEY AUTO_INCREMENT,
   itemName VARCHAR(255) NOT NULL,
   itemDescription VARCHAR(255),
   stockQuantity INT NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE invoiceItems (
   invoiceItemId INT PRIMARY KEY AUTO_INCREMENT,
   quantity INT NOT NULL,
   totalUnitPrice DECIMAL(10, 2),
-  itemId VARCHAR(13),
+  itemId INT,
   invoiceId INT,
   FOREIGN KEY (itemId) REFERENCES items(itemId),
   FOREIGN KEY (invoiceId) REFERENCES invoices(invoiceId)

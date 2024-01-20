@@ -1,7 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { HttpBaseError } from '../errors/HttpBaseError';
 import { HttpStatusCode } from '../constants/HttpStatusCode';
 import { DefaultHttpErrorMessages } from '../constants/DefaultHttpErrorMessages';
+import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
 
 export const errorHandler = (
   err: HttpBaseError,
@@ -10,16 +11,21 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   console.log(
+    'ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR'
+  );
+  console.error(req, next);
+  console.log(
     '-----------------------------------------------------------------------------------------------------------'
   );
   console.log('ERROR Handler ');
   console.log(
     '-----------------------------------------------------------------------------------------------------------'
   );
-  console.error(req, next);
   console.error(err.stack);
   const errorStatusCode = err.statusCode ? err.statusCode : HttpStatusCode.InternalServerError;
-  const errorMessage = getErrorMessage(errorStatusCode);
+  const errorMessage = Object.values(ItemsErrorMessages).includes(err.message as ItemsErrorMessages)
+    ? err.message
+    : getErrorMessage(errorStatusCode);
   return res.status(errorStatusCode).json({ message: errorMessage });
 };
 

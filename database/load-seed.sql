@@ -1,11 +1,11 @@
 -- USE supermarketdb;
 
 -- Insert data into items table
-INSERT INTO items (itemId, itemName, itemDescription, stockQuantity, price)
+INSERT INTO items ( itemName, itemDescription, stockQuantity, price)
 VALUES
-('1001', 'Milk', 'Fresh milk from local farms', 50, 2.99),
-('1002', 'Bread', 'Whole wheat bread', 30, 1.99),
-('1003', 'Eggs', 'Farm-fresh eggs', 100, 4.99);
+('Milk', 'Fresh milk from local farms', 50, 2.99),
+('Bread', 'Whole wheat bread', 30, 1.99),
+('Eggs', 'Farm-fresh eggs', 100, 4.99);
 
 -- Insert data into users table
 INSERT INTO users (email, firstName, lastName)
@@ -22,6 +22,6 @@ VALUES
 -- Insert data into invoiceItems table
 INSERT INTO invoiceItems (quantity, totalUnitPrice, itemId, invoiceId)
 VALUES
-(3, 8.97, '1001', 1),
-(2, 3.98, '1002', 1),
-(5, 24.95, '1003', 2);
+(3, 8.97, 1, 1),
+(2, 3.98, 2, 1),
+(5, 24.95, 3, 2);

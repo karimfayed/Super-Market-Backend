@@ -1,8 +1,9 @@
 import { NextFunction, Response, Router } from 'express';
-import { getAllItems } from '../controllers/itemsController';
-import { okResponseHandler } from '../middlewares/responseHandlers';
+import { addItems, getAllItems } from '../controllers/itemsController';
+import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
 
-import { GetAllItemsRequest } from '../Requests/itemsRequests';
+import { AddItemsRequest, GetAllItemsRequest } from '../Requests/itemsRequests';
+import { validateAddItemsRequest } from '../middlewares/validateItemsRequest';
 
 const router = Router();
 
@@ -14,5 +15,18 @@ router.get('/', async (_req: GetAllItemsRequest, res: Response, next: NextFuncti
     return next(err);
   }
 });
+
+router.post(
+  '/',
+  validateAddItemsRequest,
+  async (req: AddItemsRequest, res: Response, next: NextFunction) => {
+    try {
+      const addedItems = await addItems(req.body);
+      createdResponseHandler(addedItems, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
 
 export default router;

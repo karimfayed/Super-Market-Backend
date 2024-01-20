@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Sequelize, Model, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
+import { ItemsWriteDto } from '../dtos/items.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 dotenv.config();
@@ -19,7 +20,7 @@ const sequelize = new Sequelize(
 );
 
 export class Items extends Model {
-  public itemId!: string;
+  public itemId!: number;
   public itemName!: string;
   public itemDescription!: string;
   public stockQuantity!: number;
@@ -30,9 +31,9 @@ Items.init(
   {
     itemId: {
       type: DataTypes.STRING(13),
-      allowNull: false,
       unique: true,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     itemName: {
       type: DataTypes.STRING(255),
@@ -62,4 +63,30 @@ void Items.sync();
 export const getAllItemsInDatabase = async (): Promise<Items[]> => {
   const items = await Items.findAll();
   return items;
+};
+
+export const addItemsInDatabase = async (items: ItemsWriteDto[]): Promise<Items[]> => {
+  const newTransaction = await sequelize.transaction();
+  const newItems: Items[] = [];
+
+  try {
+    for (const itemWriteDTO of items) {
+      const { itemName, itemDescription, stockQuantity, price } = itemWriteDTO;
+      const item = new Items({
+        itemName: itemName,
+        itemDescription: itemDescription,
+        stockQuantity: stockQuantity,
+        price: price
+      });
+
+      await item.save({ transaction: newTransaction });
+      newItems.push(item);
+    }
+    await newTransaction.commit();
+
+    return newItems;
+  } catch (error) {
+    await newTransaction.rollback();
+    throw error;
+  }
 };

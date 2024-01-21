@@ -3,13 +3,18 @@ import { Model } from 'sequelize';
 import {
   Users,
   addUsersInDatabase,
+  deleteUserInDatabase,
   getAllUsersInDatabase,
   getUserInDatabase,
   updateUserInDatabase
 } from '../models/users';
 import { UsersDto } from '../dtos/users.dto';
-import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
-import { GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
+import {
+  createdResponseHandler,
+  noContentResponseHandler,
+  okResponseHandler
+} from '../middlewares/responseHandlers';
+import { DeleteUserRequest, GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
 
 export const getAllUsers = async (res: Response): Promise<void> => {
   const items = await getAllUsersInDatabase();
@@ -66,4 +71,10 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
   };
 
   okResponseHandler(responseDto, res);
+};
+
+export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise<void> => {
+  const { email } = req.params;
+  await deleteUserInDatabase(email);
+  noContentResponseHandler(res);
 };

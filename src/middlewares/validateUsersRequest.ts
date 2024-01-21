@@ -7,7 +7,7 @@ import {
   isEmailValid
 } from '../helpers/userValidation';
 import { UsersDto } from '../dtos/users.dto';
-import { GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
+import { DeleteUserRequest, GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
 
 export const validateAddUsersRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, UsersDto[]>,
@@ -61,6 +61,19 @@ export const validateUpdateUserRequest = (
   try {
     validateUserEmail(req as GetUserRequest);
     validateRequiredFields([user]);
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};
+
+export const validateDeleteUserRequest = (
+  req: DeleteUserRequest,
+  _res: Response,
+  next: NextFunction
+) => {
+  try {
+    validateUserEmail(req as GetUserRequest);
   } catch (error) {
     return next(error);
   }

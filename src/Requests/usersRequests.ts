@@ -12,3 +12,9 @@ export type GetUserRequest = Request<
 >;
 
 export type UpdateUserRequest = Request<Pick<UsersDto, 'email'>, NonNullable<unknown>, UsersDto>;
+
+export type DeleteUserRequest = Request<
+  Pick<UsersDto, 'email'>,
+  NonNullable<unknown>,
+  NonNullable<unknown>
+>;

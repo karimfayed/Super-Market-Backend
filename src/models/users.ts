@@ -89,3 +89,22 @@ export const updateUserInDatabase = async (email: string, updates: UsersDto) => 
   });
   return updatedUser;
 };
+
+export const deleteUserInDatabase = async (email: string) => {
+  const newTransaction = await Connection.transaction();
+
+  const deletedUser = await Users.update(
+    { isActive: 0 },
+    {
+      where: {
+        email
+      },
+      transaction: newTransaction
+    }
+  );
+  await newTransaction.commit();
+
+  if (deletedUser[0] === 0) throw new NotFoundError();
+
+  return deletedUser;
+};

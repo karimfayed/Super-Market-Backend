@@ -1,13 +1,21 @@
 import { NextFunction, Response, Router } from 'express';
 import {
   AddUsersRequest,
+  DeleteUserRequest,
   GetAllUsersRequest,
   GetUserRequest,
   UpdateUserRequest
 } from '../Requests/usersRequests';
-import { addUsers, getAllUsers, getUser, updateUser } from '../controllers/usersController';
+import {
+  addUsers,
+  deleteUser,
+  getAllUsers,
+  getUser,
+  updateUser
+} from '../controllers/usersController';
 import {
   validateAddUsersRequest,
+  validateDeleteUserRequest,
   validateGetUserRequest,
   validateUpdateUserRequest
 } from '../middlewares/validateUsersRequest';
@@ -52,6 +60,18 @@ router.put(
   async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
     try {
       await updateUser(req, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.delete(
+  '/:email',
+  validateDeleteUserRequest,
+  async (req: DeleteUserRequest, res: Response, next: NextFunction) => {
+    try {
+      await deleteUser(req, res);
     } catch (err) {
       return next(err);
     }

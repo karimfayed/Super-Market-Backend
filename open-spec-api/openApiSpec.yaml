@@ -285,7 +285,7 @@ paths:
       tags:
         - Users
       parameters:
-        - name: user_id
+        - name: email
           in: path
           required: true
           schema:

@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { ItemsWriteDto } from '../dtos/items.dto';
 import { BadRequestError } from '../errors/BadRequestError';
-import { ItemsErrorMessages } from '../constants/ItemsErrorMessages';
+import { ItemsErrorMessages } from '../constants/ErrorMessages';
 import { DeleteItemRequest, GetItemRequest, UpdateItemRequest } from '../Requests/itemsRequests';
 import {
   areFieldValuesValid,
   areRequiredFieldsPresent,
   isItemIdValid
-} from '../helpers/itemValidation';
+} from '../helpers/itemValidationHelper';
 
 export const validateAddItemsRequest = (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, ItemsWriteDto[]>,

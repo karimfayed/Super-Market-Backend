@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { BadRequestError } from '../errors/BadRequestError';
-import { UsersErrorMessages } from '../constants/ItemsErrorMessages';
+import { UsersErrorMessages } from '../constants/ErrorMessages';
 import {
   areFieldValuesValid,
   areRequiredFieldsPresent,
   isEmailValid
-} from '../helpers/userValidation';
+} from '../helpers/userValidationHelper';
 import { UsersDto } from '../dtos/users.dto';
 import {
   DeleteUserRequest,

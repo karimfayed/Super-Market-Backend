@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HttpBaseError } from '../errors/HttpBaseError';
 import { HttpStatusCode } from '../constants/HttpStatusCode';
 import { DefaultHttpErrorMessages } from '../constants/DefaultHttpErrorMessages';
-import { ItemsErrorMessages, UsersErrorMessages } from '../constants/ItemsErrorMessages';
+import { isCustomMessage } from '../helpers/messageHelper';
 
 export const errorHandler = (
   err: HttpBaseError,
@@ -23,11 +23,11 @@ export const errorHandler = (
   );
   console.error(err.stack);
   const errorStatusCode = err.statusCode ? err.statusCode : HttpStatusCode.InternalServerError;
-  const errorMessage =
-    Object.values(ItemsErrorMessages).includes(err.message as ItemsErrorMessages) ||
-    Object.values(UsersErrorMessages).includes(err.message as UsersErrorMessages)
-      ? err.message
-      : getErrorMessage(errorStatusCode);
+
+  const errorMessage = isCustomMessage(err.message)
+    ? err.message
+    : getErrorMessage(errorStatusCode);
+
   return res.status(errorStatusCode).json({ message: errorMessage });
 };
 

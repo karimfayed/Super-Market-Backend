@@ -9,3 +9,5 @@ export enum UsersErrorMessages {
   InvalidFieldValues = 'Invalid field values',
   InvalidItemId = 'Invalid email'
 }
+
+export type CustomMessage = ItemsErrorMessages | UsersErrorMessages;

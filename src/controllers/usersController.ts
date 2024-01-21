@@ -22,8 +22,9 @@ import {
 } from '../Requests/usersRequests';
 import { Invoices, getAllUserInvoicesInDatabase } from '../models/invoices';
 import { InvoiceItems, getAllInvoiceItemsForInvoicesInDatabase } from '../models/invoiceItems';
-import { InvoiceItemsDto, InvoiceReadDto } from '../dtos/invoices.dto';
-import { Items, getItemsForIdsInDatabase } from '../models/items';
+import { InvoiceReadDto } from '../dtos/invoices.dto';
+import { getItemsForIdsInDatabase } from '../models/items';
+import { getCurrentInvoiceItems } from '../helpers/invoiceHelper';
 
 export const getAllUsers = async (res: Response): Promise<void> => {
   const items = await getAllUsersInDatabase();
@@ -113,32 +114,3 @@ export const getUserInvoices = async (
 
   okResponseHandler(responseDto, res);
 };
-
-export function getCurrentInvoiceItems(
-  invoiceId: number,
-  invoiceItems: InvoiceItems[],
-  items: Items[]
-): InvoiceItemsDto[] {
-  const filteredInvoiceItems = invoiceItems.filter(
-    (item: Model<InvoiceItems>) => item.dataValues.invoiceId === invoiceId
-  );
-
-  const invoiceItemsDto: InvoiceItemsDto[] = filteredInvoiceItems
-    .map((invoiceItemIterator: Model<InvoiceItems>) => {
-      const matchedItem = items.find(
-        (item: Model<Items>) => item.dataValues.itemId === invoiceItemIterator.dataValues.itemId
-      );
-      if (matchedItem) {
-        return {
-          itemName: (matchedItem as Model<Items>).dataValues.itemName,
-          quantity: invoiceItemIterator.dataValues.quantity,
-          totalUnitPrice: invoiceItemIterator.dataValues.totalUnitPrice
-        };
-      }
-
-      return null;
-    })
-    .filter((item) => item !== null) as InvoiceItemsDto[];
-
-  return invoiceItemsDto;
-}

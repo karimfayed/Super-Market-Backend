@@ -14,7 +14,16 @@ import {
   noContentResponseHandler,
   okResponseHandler
 } from '../middlewares/responseHandlers';
-import { DeleteUserRequest, GetUserRequest, UpdateUserRequest } from '../Requests/usersRequests';
+import {
+  DeleteUserRequest,
+  GetUserInvoicesRequest,
+  GetUserRequest,
+  UpdateUserRequest
+} from '../Requests/usersRequests';
+import { Invoices, getAllUserInvoicesInDatabase } from '../models/invoices';
+import { InvoiceItems, getAllInvoiceItemsForInvoicesInDatabase } from '../models/invoiceItems';
+import { InvoiceItemsDto, InvoiceReadDto } from '../dtos/invoices.dto';
+import { Items, getItemsForIdsInDatabase } from '../models/items';
 
 export const getAllUsers = async (res: Response): Promise<void> => {
   const items = await getAllUsersInDatabase();
@@ -78,3 +87,58 @@ export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise
   await deleteUserInDatabase(email);
   noContentResponseHandler(res);
 };
+
+export const getUserInvoices = async (
+  req: GetUserInvoicesRequest,
+  res: Response
+): Promise<void> => {
+  const { email } = req.params;
+
+  const invoices = await getAllUserInvoicesInDatabase(email);
+
+  const invoiceIds = invoices.map((item: Model<Invoices>) => item.dataValues.invoiceId);
+
+  const invoiceItems = await getAllInvoiceItemsForInvoicesInDatabase(invoiceIds);
+
+  const itemIds = invoiceItems.map((item: Model<InvoiceItems>) => item.dataValues.itemId);
+
+  const items = await getItemsForIdsInDatabase(itemIds);
+
+  const responseDto: InvoiceReadDto[] = invoices.map((invoice: Model<Invoices>) => ({
+    invoiceId: invoice.dataValues.invoiceId,
+    date: invoice.dataValues.creationDate,
+    status: invoice.dataValues.invoiceStatus,
+    invoiceItems: getCurrentInvoiceItems(invoice.dataValues.invoiceId, invoiceItems, items)
+  }));
+
+  okResponseHandler(responseDto, res);
+};
+
+export function getCurrentInvoiceItems(
+  invoiceId: number,
+  invoiceItems: InvoiceItems[],
+  items: Items[]
+): InvoiceItemsDto[] {
+  const filteredInvoiceItems = invoiceItems.filter(
+    (item: Model<InvoiceItems>) => item.dataValues.invoiceId === invoiceId
+  );
+
+  const invoiceItemsDto: InvoiceItemsDto[] = filteredInvoiceItems
+    .map((invoiceItemIterator: Model<InvoiceItems>) => {
+      const matchedItem = items.find(
+        (item: Model<Items>) => item.dataValues.itemId === invoiceItemIterator.dataValues.itemId
+      );
+      if (matchedItem) {
+        return {
+          itemName: (matchedItem as Model<Items>).dataValues.itemName,
+          quantity: invoiceItemIterator.dataValues.quantity,
+          totalUnitPrice: invoiceItemIterator.dataValues.totalUnitPrice
+        };
+      }
+
+      return null;
+    })
+    .filter((item) => item !== null) as InvoiceItemsDto[];
+
+  return invoiceItemsDto;
+}

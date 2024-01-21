@@ -18,3 +18,9 @@ export type DeleteUserRequest = Request<
   NonNullable<unknown>,
   NonNullable<unknown>
 >;
+
+export type GetUserInvoicesRequest = Request<
+  Pick<UsersDto, 'email'>,
+  NonNullable<unknown>,
+  NonNullable<unknown>
+>;

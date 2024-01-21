@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Op } from 'sequelize';
 import { ItemsWriteDto } from '../dtos/items.dto';
 import { NotFoundError } from '../errors/NotFoundError';
 import { Connection } from './databaseConnection';
@@ -109,4 +109,15 @@ export const deleteItemInDatabase = async (itemId: number) => {
   if (deletedItem[0] === 0) throw new NotFoundError();
 
   return deletedItem;
+};
+
+export const getItemsForIdsInDatabase = async (itemIds: number[]): Promise<Items[]> => {
+  const invoiceItems = await Items.findAll({
+    where: {
+      itemId: {
+        [Op.in]: itemIds
+      }
+    }
+  });
+  return invoiceItems;
 };

@@ -3,6 +3,7 @@ import {
   AddUsersRequest,
   DeleteUserRequest,
   GetAllUsersRequest,
+  GetUserInvoicesRequest,
   GetUserRequest,
   UpdateUserRequest
 } from '../Requests/usersRequests';
@@ -11,11 +12,13 @@ import {
   deleteUser,
   getAllUsers,
   getUser,
+  getUserInvoices,
   updateUser
 } from '../controllers/usersController';
 import {
   validateAddUsersRequest,
   validateDeleteUserRequest,
+  validateGetUserInvoicesRequest,
   validateGetUserRequest,
   validateUpdateUserRequest
 } from '../middlewares/validateUsersRequest';
@@ -72,6 +75,18 @@ router.delete(
   async (req: DeleteUserRequest, res: Response, next: NextFunction) => {
     try {
       await deleteUser(req, res);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.get(
+  '/:email/invoices',
+  validateGetUserInvoicesRequest,
+  async (req: GetUserInvoicesRequest, res: Response, next: NextFunction) => {
+    try {
+      await getUserInvoices(req, res);
     } catch (err) {
       return next(err);
     }

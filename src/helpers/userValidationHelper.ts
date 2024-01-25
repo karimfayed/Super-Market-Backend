@@ -1,4 +1,4 @@
-import { GetUserRequest } from 'src/Requests/usersRequests';
+import { GetUserRequest } from '../Requests/usersRequests';
 import { UsersDto } from '../dtos/users.dto';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

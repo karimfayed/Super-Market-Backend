@@ -29,7 +29,7 @@ router.get('/', async (_req: GetAllUsersRequest, res: Response, next: NextFuncti
   try {
     await getAllUsers(res);
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 
@@ -40,7 +40,7 @@ router.post(
     try {
       await addUsers(req.body, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -52,7 +52,7 @@ router.get(
     try {
       await getUser(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -64,7 +64,7 @@ router.put(
     try {
       await updateUser(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -76,7 +76,7 @@ router.delete(
     try {
       await deleteUser(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -88,7 +88,7 @@ router.get(
     try {
       await getUserInvoices(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );

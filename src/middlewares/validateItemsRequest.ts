@@ -19,9 +19,9 @@ export const validateAddItemsRequest = (
     validateRequiredFields(items);
     validateFieldValues(items);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 export const validateRequiredFields = (items: ItemsWriteDto[]) => {
@@ -42,9 +42,9 @@ export const validateGetItemRequest = (req: GetItemRequest, _res: Response, next
   try {
     validateItemId(req);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 function validateItemId(req: GetItemRequest) {
@@ -62,9 +62,9 @@ export const validateUpdateItemRequest = (
     validateItemId(req as GetItemRequest);
     validateRequiredFields([items]);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 export const validateDeleteItemRequest = (
@@ -75,7 +75,7 @@ export const validateDeleteItemRequest = (
   try {
     validateItemId(req as GetItemRequest);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };

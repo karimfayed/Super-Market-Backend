@@ -1,4 +1,4 @@
-import { GetItemRequest } from 'src/Requests/itemsRequests';
+import { GetItemRequest } from '../Requests/itemsRequests';
 import { ItemsWriteDto } from '../dtos/items.dto';
 
 export const areRequiredFieldsPresent = (item: ItemsWriteDto) => {

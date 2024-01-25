@@ -27,7 +27,7 @@ router.get('/', async (_req: GetAllItemsRequest, res: Response, next: NextFuncti
   try {
     await getAllItems(res);
   } catch (err) {
-    return next(err);
+    next(err);
   }
 });
 
@@ -38,7 +38,7 @@ router.post(
     try {
       await addItems(req.body, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -50,7 +50,7 @@ router.get(
     try {
       await getItem(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -62,7 +62,7 @@ router.put(
     try {
       await updateItem(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );
@@ -74,7 +74,7 @@ router.delete(
     try {
       await deleteItem(req, res);
     } catch (err) {
-      return next(err);
+      next(err);
     }
   }
 );

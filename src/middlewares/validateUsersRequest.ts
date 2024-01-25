@@ -24,9 +24,9 @@ export const validateAddUsersRequest = (
     validateRequiredFields(users);
     validateFieldValues(users);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 export const validateRequiredFields = (items: UsersDto[]) => {
@@ -47,14 +47,14 @@ export const validateGetUserRequest = (req: GetUserRequest, _res: Response, next
   try {
     validateUserEmail(req);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 function validateUserEmail(req: GetUserRequest) {
   const isValid = isEmailValid(req);
-  if (!isValid) throw new BadRequestError(UsersErrorMessages.InvalidItemId);
+  if (!isValid) throw new BadRequestError(UsersErrorMessages.InvalidEmail);
 }
 
 export const validateUpdateUserRequest = (
@@ -67,9 +67,9 @@ export const validateUpdateUserRequest = (
     validateUserEmail(req as GetUserRequest);
     validateRequiredFields([user]);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 export const validateDeleteUserRequest = (
@@ -80,9 +80,9 @@ export const validateDeleteUserRequest = (
   try {
     validateUserEmail(req as GetUserRequest);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };
 
 export const validateGetUserInvoicesRequest = (
@@ -93,7 +93,7 @@ export const validateGetUserInvoicesRequest = (
   try {
     validateUserEmail(req);
   } catch (error) {
-    return next(error);
+    next(error);
   }
-  return next();
+  next();
 };

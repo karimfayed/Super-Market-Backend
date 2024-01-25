@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { Connection } from './databaseConnection';
 import { InvoiceStatus } from '../constants/InvoiceStatus';
+import { NotFoundError } from '../errors/NotFoundError';
 
 export class Invoices extends Model {
   public invoiceId!: number;
@@ -49,5 +50,13 @@ export const getAllUserInvoicesInDatabase = async (email: string): Promise<Invoi
       email
     }
   });
+  return invoices;
+};
+
+export const getInvoicesInDatabase = async (invoiceId: number): Promise<Invoices> => {
+  const invoices = await Invoices.findByPk(invoiceId);
+
+  if (!invoices) throw new NotFoundError();
+
   return invoices;
 };

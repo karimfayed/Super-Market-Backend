@@ -7,7 +7,13 @@ export enum ItemsErrorMessages {
 export enum UsersErrorMessages {
   RequiredFieldsMissing = 'Missing required fields',
   InvalidFieldValues = 'Invalid field values',
-  InvalidItemId = 'Invalid email'
+  InvalidEmail = 'Invalid email'
 }
 
-export type CustomMessage = ItemsErrorMessages | UsersErrorMessages;
+export enum InvoicesErrorMessages {
+  RequiredFieldsMissing = 'Missing required fields',
+  InvalidFieldValues = 'Invalid field values',
+  InvalidInvoiceId = 'Invalid invoice Id'
+}
+
+export type CustomMessage = ItemsErrorMessages | UsersErrorMessages | InvoicesErrorMessages;
